@@ -28,6 +28,7 @@
         <IsPublishable>False</IsPublishable>
         <Configurations>Debug;Release;Pack</Configurations>
         <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+        <RestoreSources>https://nuget.bepinex.dev/v3/index.json;$(RestoreSources)</RestoreSources>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Debug'">
