@@ -1,0 +1,83 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <NoWarn>IDE0058;IDE0051;IDE0052;IDE0090;IDE0028;IDE0305;IDE0045;IDE0066;IDE0010;IDE0022;IDE0072;CS0649</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Product>PANEGamepad</Product>
+        <Version>0.0.1</Version>
+        <Description>Pharaoh: A New Era. Gamepad Support plugin</Description>
+        <Authors>Artem Shpynov</Authors>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net481</TargetFramework>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>latest</LangVersion>
+        <Company>$(Authors)</Company>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>preview-all</AnalysisLevel>
+        <PackageId>$(Product)</PackageId>
+        <PackageVersion>$(Version)</PackageVersion>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <FileVersion>$(Version)</FileVersion>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AssemblyName>$(Product)</AssemblyName>
+        <IsPackable>false</IsPackable>
+        <IsPublishable>False</IsPublishable>
+        <Configurations>Debug;Release;Pack</Configurations>
+        <GenerateAssemblyInfo>True</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <DebugType>full</DebugType>
+        <OutputPath>C:\Games\Pharaoh A New Era\BepInEx\plugins</OutputPath>
+        <Optimize>False</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <DebugType>none</DebugType>
+        <OutputPath>C:\Games\Pharaoh A New Era\BepInEx\plugins</OutputPath>
+        <IsPublishable>False</IsPublishable>
+        <Optimize>True</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Pack'">
+        <DebugType>none</DebugType>
+        <OutputPath>obj/$(Configuration)/bin</OutputPath>
+        <Optimize>True</Optimize>
+    </PropertyGroup>
+
+    <Target Name="GenerateBuildConstants" BeforeTargets="CoreCompile">
+        <WriteLinesToFile
+            File="$(IntermediateOutputPath)PluginInfo.g.cs"
+            Lines="
+namespace $(Product)
+{
+    public static class PluginInfo
+    {
+        public const string Version = &quot;$(AssemblyVersion)&quot;%3B
+        public const string Name = &quot;$(product)&quot;%3B
+    }
+}"
+                Overwrite="true" />
+
+        <ItemGroup>
+            <Compile Include="$(IntermediateOutputPath)PluginInfo.g.cs" />
+        </ItemGroup>
+    </Target>
+
+    <ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.0" />
+        <PackageReference Include="UnityEngine" Version="5.6.1" IncludeAssets="compile" />
+        <PackageReference Include="UnityEngine.Modules" Version="2020.1.1" IncludeAssets="compile" />
+        <Reference Include="UnityEngine.UI" HintPath="refs\UnityEngine.UI.dll" Private="false" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+        <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    </ItemGroup>
+</Project>
