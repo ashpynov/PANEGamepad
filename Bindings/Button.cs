@@ -27,7 +27,8 @@ namespace PANEGamepad.Bindings
             return buttonCode != GamepadCode.Count ? buttonCode.ToString() : keyCode.ToString();
         }
 
-        public int Hash => buttonCode != GamepadCode.Count ? (int)buttonCode : -(int)keyCode;
+        public int Code => 1 + (int)buttonCode + ((int)keyCode * (int)GamepadCode.Count);
+
         public static bool GetButtonDown(Button button)
         {
             return button.keyCode != default ? Input.GetKeyDown(button.keyCode) : InputTracker.GamePad.GetButtonDown(button.buttonCode);

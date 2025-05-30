@@ -62,9 +62,7 @@ namespace PANEGamepad
         public static Component GetHoveredComponent(IEnumerable<Component> Components)
         {
             Vector3 position = Input.mousePosition;
-            Component res = Components.FirstOrDefault(c => IsPositionInComponent(position, c));
-            Plugin.Log.LogInfo(res != null ? $"FindFirst = {res.name}" : "Not found first");
-            return res;
+            return Components.FirstOrDefault(c => IsPositionInComponent(position, c));
         }
 
         public static Component FindComponent(IEnumerable<Component> Components, Component from, Vector3 dir, float maxDistance = float.PositiveInfinity)
@@ -107,12 +105,6 @@ namespace PANEGamepad
                 }
             }
             candidates.Sort((a, b) => b.proximityFactor.CompareTo(a.proximityFactor));
-
-            // foreach (Proximity p in candidates.Where(p => SceneUtility.IsInteractible(p.component)).Take(20))
-            // {
-            //     Plugin.Log.LogInfo($"Candidates: {p.proximityFactor} {p.component.name}: active:{SceneUtility.IsInteractible(p.component)} ");
-            // }
-
             return candidates.FirstOrDefault(c => SceneUtility.IsSelectable(c.component, from))?.component;
         }
 

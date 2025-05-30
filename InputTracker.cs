@@ -5,6 +5,7 @@ using PANEGamepad.Bindings;
 using PANEGamepad.Gamepad;
 using PANEGamepad.Scenes;
 using System.Linq;
+using PANEGamepad.Scenes.Customization;
 
 
 namespace PANEGamepad
@@ -71,6 +72,8 @@ namespace PANEGamepad
             MapKey("LT + X", "Road", SceneCode.MainGame);               // Road
             MapKey("LT + Y", "Roadblock", SceneCode.MainGame);          // Roadblock
 
+            bindings.Add(new Binding("A", sceneCode: SceneCode.SingleConfirm, onDown: SingleConfirmScene.PressConfirm));  // Confirm on A
+
             bindings.Add(new Binding("LT + Down", onDown: () => NextObserver(true)));
             bindings.Add(new Binding("LT + Up", onDown: () => NextObserver(false)));
 
@@ -87,7 +90,7 @@ namespace PANEGamepad
             MapNav(KeyCode.LeftArrow, Vector3.left);
             MapNav(KeyCode.RightArrow, Vector3.right);
 
-            bindings.Sort((a, b) => b.Order - a.Order);
+            bindings.Sort(Binding.CompareReverse);
         }
         private void Update()
         {

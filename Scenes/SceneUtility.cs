@@ -66,7 +66,7 @@ namespace PANEGamepad.Scenes
 
         public static bool IsSelectable(Component obj, Component current = null)
         {
-            return (obj as Behaviour).isActiveAndEnabled
+            return ((obj is Behaviour beh && beh.isActiveAndEnabled) || true)
                     && IsEnabled(obj)
                     && ((IsOnScroll(obj) && IsOnScroll(current)) || VisiblePoint(obj) != default);
         }

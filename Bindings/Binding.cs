@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using UnityEngine;
 using PANEGamepad.Gamepad;
@@ -20,29 +19,44 @@ namespace PANEGamepad.Bindings
         private readonly SceneCode _sceneCode = sceneCode;
         private readonly Handler _onDown = onDown;
         private readonly Handler _onUp = onUp;
-        private int? _hash = null;
-
         private bool _pressed = false;
         private float _holdTimer = 0;           // Time since initial press
         private float _repeatTimer = 0;         // Time since last repeat
 
-
-        public int Order => _hash ??= CalcOrder();
-
+        public int Code => _button.Code;
         public int Length => _shift.Length + 1;
         public new string ToString()
         {
             return string.Join(" + ", [.. _shift.Select(b => b.ToString()), _button.ToString()]);
         }
 
-        private int CalcOrder()
+        public static int CompareReverse(Binding a, Binding b)
         {
-            int hash = _button.Hash;
-            for (int i = 0; i < _shift.Length; i++)
+            // by scenes
+            int cmp = (int)b._sceneCode - (int)a._sceneCode;
+            if (cmp != 0)
             {
-                hash += (int)Math.Pow((int)GamepadCode.Count, _shift.Length - i) * _shift[i].Hash;
+                return cmp;
             }
-            return hash;
+            // by lengths
+            cmp = b.Length - a.Length;
+            if (cmp != 0)
+            {
+                return cmp;
+            }
+
+            // by shifts
+            for (int i = 0; i < b.Length - 1; i++)
+            {
+                cmp = a._shift[i].Code - b._shift[i].Code;
+                if (cmp != 0)
+                {
+                    return cmp;
+                }
+            }
+
+            // by buttons
+            return a._button.Code - b._button.Code;
         }
 
         public Binding(string buttons, SceneCode sceneCode = SceneCode.None, Handler onDown = null, Handler onUp = null)
@@ -96,19 +110,21 @@ namespace PANEGamepad.Bindings
             }
             return false;
         }
-        public int HandleDown()
+        public bool HandleDown()
         {
             if (GetDown()
             && (_sceneCode == SceneCode.None || _sceneCode == InputTracker.Scene.GetSceneCode()))
             {
-                _onDown?.Invoke();
-                _pressed = true;
-                _holdTimer = 0;
-                _repeatTimer = 0;
-                Plugin.Log.LogInfo($"{ToString()} Down");
-                return _shift.Length + 1;
+                if (_onDown?.Invoke() == true)
+                {
+                    _pressed = true;
+                    _holdTimer = 0;
+                    _repeatTimer = 0;
+                    Plugin.Log.LogInfo($"{ToString()} Down");
+                    return true;
+                }
             }
-            return 0;
+            return false;
         }
 
         public void HandleRepeat()
@@ -137,16 +153,14 @@ namespace PANEGamepad.Bindings
                 bind.HandleRepeat();
             }
 
-            int longerDown = 0;
+            List<int> processed = new();
 
             foreach (Binding bind in bindings)
             {
-                if (bind.Length < longerDown)
+                if (!processed.Contains(bind.Code) && bind.HandleDown())
                 {
-                    break;
+                    processed.Add(bind.Code);
                 }
-
-                longerDown = Math.Max(bind.HandleDown(), longerDown);
             }
         }
     }

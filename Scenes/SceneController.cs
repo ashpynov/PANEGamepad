@@ -24,9 +24,9 @@ namespace PANEGamepad.Scenes
             if (selectablesCount != _lastSelectablesCount || force)
             {
                 _current = null;
-                _sceneCode = SceneCode.None;
                 _lastSelectablesCount = selectablesCount;
             }
+            _sceneCode = SceneCode.None;
             _filtered = null;
         }
 
@@ -50,15 +50,12 @@ namespace PANEGamepad.Scenes
             {
                 if (GetSceneCode() == SceneCode.MainGame)
                 {
-                    Debug.LogWarning("MainGame scene");
                     _filtered = MainGameScene.Filter(GetScene(), filter, filter2);
                 }
                 else
                 {
-                    Debug.LogWarning("Undefined scene");
                     _filtered = GetScene();
                 }
-
             }
             return _filtered;
         }
@@ -66,6 +63,7 @@ namespace PANEGamepad.Scenes
         private SceneCode DetectScene(IEnumerable<Component> scene)
         {
             return
+                SingleConfirmScene.Taste(scene) ? SceneCode.SingleConfirm :
                 SceneUtility.SceneMatch(scene, ["Play", "Continue", "Exit"]) ? SceneCode.Title :
                 MainGameScene.Taste(scene) ? SceneCode.MainGame :
                 SceneCode.Undefined;
