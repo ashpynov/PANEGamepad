@@ -6,6 +6,7 @@ namespace PANEGamepad.Scenes
         Undefined,
         Title,
         MainGame,
-        SingleConfirm
+        SingleConfirm,
+        Overseers
     }
 }

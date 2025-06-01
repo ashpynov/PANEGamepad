@@ -7,15 +7,15 @@ using UnityEngine.UI;
 
 namespace PANEGamepad.Scenes
 {
-    public static class SceneUtility
+    public partial class SceneController
     {
-        public static bool SceneMatch(IEnumerable<Component> scene, IEnumerable<string> hasNames = default, IEnumerable<string> hasNoNames = default)
+        public static bool SceneMatch(IEnumerable<GameObject> scene, IEnumerable<string> hasNames = default, IEnumerable<string> hasNoNames = default)
         {
-            IEnumerable<string> names = scene.Select(s => s.name);
+            IEnumerable<string> names = scene.Where(s => s != null).Select(s => s.name);
             return (hasNames == default || names.Intersect(hasNames).Count() == hasNames.Count())
                 && (hasNoNames == default || names.Intersect(hasNoNames).Count() == 0);
         }
-        public static Vector2 VisiblePoint(Component button)
+        public static Vector2 VisiblePoint(GameObject button)
         {
             // Step 1: Get the button's center in screen space
             Canvas canvas = button.GetComponentInParent<Canvas>();
@@ -64,17 +64,17 @@ namespace PANEGamepad.Scenes
             return default;
         }
 
-        public static bool IsSelectable(Component obj, Component current = null)
+        public static bool IsSelectable(GameObject obj, GameObject current = null)
         {
-            return ((obj is Behaviour beh && beh.isActiveAndEnabled) || true)
+            return ((obj.GetComponent<Behaviour>() is Behaviour beh && beh.isActiveAndEnabled) || true)
                     && IsEnabled(obj)
                     && ((IsOnScroll(obj) && IsOnScroll(current)) || VisiblePoint(obj) != default);
         }
-        public static bool IsOnScroll(Component obj)
+        public static bool IsOnScroll(GameObject obj)
         {
             return obj != null && obj.GetComponentInParent<ScrollRect>() != null;
         }
-        public static bool IsEnabled(Component obj)
+        public static bool IsEnabled(GameObject obj)
         {
             if (!obj.GetComponent<Behaviour>().isActiveAndEnabled)
             {

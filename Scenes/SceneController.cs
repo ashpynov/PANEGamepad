@@ -7,13 +7,14 @@ using UnityEngine.UI;
 
 namespace PANEGamepad.Scenes
 {
-    public class SceneController
+    public partial class SceneController
     {
-        private IEnumerable<Component> _current = null;
-        private IEnumerable<Component> _filtered = null;
+        private IEnumerable<GameObject> _current = null;
+        private IEnumerable<GameObject> _filtered = null;
         private Vector2 _filteredDirection = Vector2.zero;
         private SceneCode _sceneCode = SceneCode.None;
 
+        private SceneCode _previousScene = SceneCode.None;
         private GameObject _focused = null;
         private int _lastSelectablesCount = 0;
 
@@ -35,16 +36,41 @@ namespace PANEGamepad.Scenes
             if (_sceneCode == SceneCode.None)
             {
                 _sceneCode = DetectScene(GetScene());
+                if (_sceneCode != _previousScene)
+                {
+                    InputTracker.SetFocus(null);
+                    _previousScene = _sceneCode;
+                }
             }
             return _sceneCode;
         }
-        public IEnumerable<Component> GetScene()
+
+        public void SetSceneCode(SceneCode sceneCode)
         {
-            _current ??= GetSceneComponents();
+            _sceneCode = sceneCode;
+        }
+
+        public void CheckSceneChanged(bool force)
+        {
+            SceneCode[] CheckPrevScene = [SceneCode.Overseers];
+            if (force || CheckPrevScene.Contains(_previousScene))
+            {
+                _sceneCode = DetectScene(GetScene());
+                if (_sceneCode != _previousScene)
+                {
+                    InputTracker.SetFocus(null);
+                    _previousScene = _sceneCode;
+                }
+            }
+        }
+
+        public IEnumerable<GameObject> GetScene()
+        {
+            _current ??= GetSceneGameObjects();
             return _current;
         }
 
-        public IEnumerable<Component> GetScene(object filter, object filter2 = null)
+        public IEnumerable<GameObject> GetScene(object filter, object filter2 = null)
         {
             if (_filtered == null)
             {
@@ -60,11 +86,12 @@ namespace PANEGamepad.Scenes
             return _filtered;
         }
 
-        private SceneCode DetectScene(IEnumerable<Component> scene)
+        private SceneCode DetectScene(IEnumerable<GameObject> scene)
         {
             return
+                OverseersScene.Taste(scene) ? SceneCode.Overseers :
                 SingleConfirmScene.Taste(scene) ? SceneCode.SingleConfirm :
-                SceneUtility.SceneMatch(scene, ["Play", "Continue", "Exit"]) ? SceneCode.Title :
+                SceneController.SceneMatch(scene, ["Play", "Continue", "Exit"]) ? SceneCode.Title :
                 MainGameScene.Taste(scene) ? SceneCode.MainGame :
                 SceneCode.Undefined;
         }
@@ -73,9 +100,8 @@ namespace PANEGamepad.Scenes
         {
             if (GetSceneCode() == sceneCode)
             {
-                Component component = GetScene().FirstOrDefault(c => c.name == buttonName);
+                GameObject component = GetScene().FirstOrDefault(c => c.name == buttonName);
                 return PressButton(component.gameObject);
-
             }
             return false;
         }
@@ -87,6 +113,11 @@ namespace PANEGamepad.Scenes
                 button.onClick.Invoke();
                 return true;
             }
+            else if (go != null && go.GetComponent("CustomToggle") as MonoBehaviour is MonoBehaviour toggle)
+            {
+                toggle.Invoke("OnToggleClick", 0f);
+                return true;
+            }
             return false;
         }
 
@@ -94,12 +125,14 @@ namespace PANEGamepad.Scenes
         {
             if (_focused != null)
             {
-                PointerEventData pointerData = new(EventSystem.current)
+                if (!InputTracker.IsHovered(_focused))
                 {
-                    position = _focused.GetComponent<RectTransform>().position
-                };
-                ExecuteEvents.Execute(_focused, pointerData, ExecuteEvents.pointerExitHandler);
-
+                    PointerEventData pointerData = new(EventSystem.current)
+                    {
+                        position = _focused.GetComponent<RectTransform>().position
+                    };
+                    ExecuteEvents.Execute(_focused, pointerData, ExecuteEvents.pointerExitHandler);
+                }
                 _focused = null;
             }
 
@@ -116,16 +149,17 @@ namespace PANEGamepad.Scenes
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
-        private IEnumerable<Component> GetSceneComponents(Vector2 direction = default)
+        private IEnumerable<GameObject> GetSceneGameObjects(Vector2 direction = default)
         {
 
 
-            List<Component> components = new();
-            components.AddRange(Selectable.allSelectablesArray.Where(c => c.interactable));
+            List<GameObject> components = new();
+            components.AddRange(Selectable.allSelectablesArray.Where(c => c.interactable).Select(c => c.gameObject));
 
             string[] CustomTypes = ["ButtonWithHover", "GameModeWidget", "MapEntry", "WorldMapCity"];
             components.AddRange(GameObject.FindObjectsOfType<MonoBehaviour>()
-                .Where(c => CustomTypes.Contains(c.GetType().Name)));
+                .Where(c => CustomTypes.Contains(c.GetType().Name))
+                .Select(c => c.gameObject));
 
             return components;
         }

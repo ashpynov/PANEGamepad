@@ -39,8 +39,8 @@ Conrol optimized to be more comfortable in different game 'scenes'.
 * **LT+B** - Remove
 * **LT+X** - Road
 * **LT+Y** - Roadblock
-* **LT+DPad Up** -
-* **LT+DPad Down** - Flat mode
+* **LT+DPad Up** - Commerse observer /Previous Overseer
+* **LT+DPad Down** - Granaries Overseer / Next Overseer
 * **LT+DPad Left** -
 * **LT+DPad Right** -
 * **LT+LB** - Decrease Speed
@@ -85,7 +85,6 @@ Just press 'A' button to continue on this screen.
 - More buttons to assign
 - General: Scroll by RStick
 - World map: navigate within trade - cities only
-- Single-button screen 'A' to accept
 - Skip Inactive 'Accept' button within delivery request
 - 'ResetScene to remove 'fake focus' on changed scenes
 - Zoom by trigger

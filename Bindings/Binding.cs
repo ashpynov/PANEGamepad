@@ -27,7 +27,7 @@ namespace PANEGamepad.Bindings
         public int Length => _shift.Length + 1;
         public new string ToString()
         {
-            return string.Join(" + ", [.. _shift.Select(b => b.ToString()), _button.ToString()]);
+            return _sceneCode.ToString() + ": " + string.Join(" + ", [.. _shift.Select(b => b.ToString()), _button.ToString()]);
         }
 
         public static int CompareReverse(Binding a, Binding b)
@@ -105,7 +105,6 @@ namespace PANEGamepad.Bindings
             {
                 _onUp?.Invoke();
                 _pressed = false;
-                Plugin.Log.LogInfo($"{ToString()} Up");
                 return true;
             }
             return false;
@@ -120,7 +119,6 @@ namespace PANEGamepad.Bindings
                     _pressed = true;
                     _holdTimer = 0;
                     _repeatTimer = 0;
-                    Plugin.Log.LogInfo($"{ToString()} Down");
                     return true;
                 }
             }
@@ -138,8 +136,7 @@ namespace PANEGamepad.Bindings
                     if (_repeatTimer >= RepeatRate)
                     {
                         _repeatTimer = 0f;
-                        _onDown?.Invoke();  // Repeat event
-                        Plugin.Log.LogInfo($"{ToString()} Repeat down");
+                        _onDown?.Invoke();
                     }
                 }
             }

@@ -2,24 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
 namespace PANEGamepad.Scenes.Customization
 {
     public static class MainGameScene
     {
-        public static bool Taste(IEnumerable<Component> scene)
+        public const SceneCode Code = SceneCode.MainGame;
+        public static bool Taste(IEnumerable<GameObject> scene)
         {
-            return SceneUtility.SceneMatch(scene, ["MenuButton", "PlayerButton", "Remove", "Pause"]);
+            return SceneController.SceneMatch(scene, ["MenuButton", "PlayerButton", "Remove", "Pause"]);
         }
 
 
-        private static string GetComponentPanel(Component component)
+        private static string GetGameObjectPanel(GameObject component)
         {
             if (component == null)
             {
                 return null;
             }
-            string[] path = SceneUtility.GetPath(component.gameObject);
+            string[] path = SceneController.GetPath(component.gameObject);
             return path.Length >= 4 && path[2] == "Bars" ? path[3] : null;
         }
 
@@ -32,16 +32,16 @@ namespace PANEGamepad.Scenes.Customization
                    null;
         }
 
-        private static IEnumerable<Component> FilterByPanelName(IEnumerable<Component> scene, string panel)
+        private static IEnumerable<GameObject> FilterByPanelName(IEnumerable<GameObject> scene, string panel)
         {
             return panel != null
-            ? scene.Where(component => !(GetComponentPanel(component) is string componentPanel && componentPanel != panel))
+            ? scene.Where(component => !(GetGameObjectPanel(component) is string componentPanel && componentPanel != panel))
             : scene;
         }
 
-        public static IEnumerable<Component> Filter(IEnumerable<Component> scene, object filter, object filter2 = null)
+        public static IEnumerable<GameObject> Filter(IEnumerable<GameObject> scene, object filter, object filter2 = null)
         {
-            if (filter is Component current && GetComponentPanel(current) is string panel)
+            if (filter is GameObject current && GetGameObjectPanel(current) is string panel)
             {
                 return FilterByPanelName(scene, panel);
             }
@@ -54,5 +54,6 @@ namespace PANEGamepad.Scenes.Customization
 
             return scene;
         }
+
     }
 }

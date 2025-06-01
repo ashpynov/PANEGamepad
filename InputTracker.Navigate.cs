@@ -8,15 +8,15 @@ namespace PANEGamepad
 {
     public partial class InputTracker : MonoBehaviour
     {
-        private Component _current;
+        private GameObject _current;
 
-        public class Proximity(Component component, float proximityFactor)
+        public class Proximity(GameObject component, float proximityFactor)
         {
-            public Component component = component;
+            public GameObject component = component;
             public float proximityFactor = proximityFactor;
         }
 
-        private static float GetProximity(Component to, Vector3 fromScreenPos, Vector3 direction, float maxSqrMagnitude)
+        private static float GetProximity(GameObject to, Vector3 fromScreenPos, Vector3 direction, float maxSqrMagnitude)
         {
             RectTransform rectTransform = to.transform as RectTransform;
             Canvas canvas = to.GetComponentInParent<Canvas>();
@@ -37,15 +37,15 @@ namespace PANEGamepad
             return float.NegativeInfinity;
         }
 
-        public static bool IsPositionInComponent(Vector3 position, Component component)
+        public static bool IsPositionInGameObject(Vector3 position, GameObject gameObject)
         {
-            if (component == null)
+            if (gameObject == null)
             {
                 return false;
             }
 
-            RectTransform rectTransform = component.GetComponent<RectTransform>();
-            Canvas canvas = component.GetComponentInParent<Canvas>();
+            RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+            Canvas canvas = gameObject.GetComponentInParent<Canvas>();
             if (rectTransform == null || canvas == null)
             {
                 return false;
@@ -59,13 +59,19 @@ namespace PANEGamepad
             );
         }
 
-        public static Component GetHoveredComponent(IEnumerable<Component> Components)
+        public static GameObject GetHoveredGameObject(IEnumerable<GameObject> GameObjects)
         {
             Vector3 position = Input.mousePosition;
-            return Components.FirstOrDefault(c => IsPositionInComponent(position, c));
+            return GameObjects.FirstOrDefault(c => IsPositionInGameObject(position, c.gameObject))?.gameObject;
         }
 
-        public static Component FindComponent(IEnumerable<Component> Components, Component from, Vector3 dir, float maxDistance = float.PositiveInfinity)
+        public static bool IsHovered(GameObject go)
+        {
+            Vector3 position = Input.mousePosition;
+            return IsPositionInGameObject(position, go);
+        }
+
+        public static GameObject FindGameObject(IEnumerable<GameObject> GameObjects, GameObject from, Vector3 dir, float maxDistance = float.PositiveInfinity)
         {
             Vector3 dirNorm = dir.normalized;
 
@@ -91,7 +97,7 @@ namespace PANEGamepad
                 maxSqrMagnitude = distance * distance;
             }
 
-            foreach (Component component in Components.Where(c => c != null))
+            foreach (GameObject component in GameObjects.Where(c => c != null))
             {
                 if (from != null && component.name == from.name && component == from)
                 {
@@ -105,7 +111,7 @@ namespace PANEGamepad
                 }
             }
             candidates.Sort((a, b) => b.proximityFactor.CompareTo(a.proximityFactor));
-            return candidates.FirstOrDefault(c => SceneUtility.IsSelectable(c.component, from))?.component;
+            return candidates.FirstOrDefault(c => SceneController.IsSelectable(c.component, from))?.component;
         }
 
         private static Vector3 GetPointOnRectEdge(RectTransform rect, Vector2 dir)
@@ -126,10 +132,10 @@ namespace PANEGamepad
 
         private Vector2 lastCursorPos;
         private Vector2 startCursorPos;
-        private void MoveCursorToElement(Component button)
+        private void MoveCursorToElement(GameObject button)
         {
-            SceneUtility.EnsureVisible(button.gameObject);
-            lastCursorPos = SceneUtility.VisiblePoint(button);
+            SceneController.EnsureVisible(button.gameObject);
+            lastCursorPos = SceneController.VisiblePoint(button);
             SetCursorPos(lastCursorPos);
         }
 
@@ -156,37 +162,37 @@ namespace PANEGamepad
                 startCursorPos = Input.mousePosition;
             }
             Scene.Invalidate(force: true);
-            IEnumerable<Component> Components = Scene.GetScene();
+            IEnumerable<GameObject> GameObjects = Scene.GetScene();
 
-            if (Components == null || Components.Count() == 0)
+            if (GameObjects == null || GameObjects.Count() == 0)
             {
                 _current = null;
                 return false;
             }
 
-            _current ??= GetHoveredComponent(Components);
+            _current ??= GetHoveredGameObject(GameObjects);
 
-            Component _previuos = _current;
+            GameObject _previuos = _current;
             bool found = false;
 
             if (_current == null)
             {
-                _current = FindComponent(Components, _current, direction, 0.5f);
+                _current = FindGameObject(GameObjects, _current, direction, 0.5f);
                 found = _current != null;
             }
 
             if (!found)
             {
-                Components = Scene.GetScene(_current, direction);
+                GameObjects = Scene.GetScene(_current, direction);
 
-                if (Components.Count() != 0)
+                if (GameObjects.Count() != 0)
                 {
-                    _current = FindComponent(Components, _current, direction);
+                    _current = FindGameObject(GameObjects, _current, direction);
                 }
 
                 if (_current == null && _previuos == null)
                 {
-                    _current = Components.FirstOrDefault(c => SceneUtility.IsSelectable(c));
+                    _current = GameObjects.FirstOrDefault(c => SceneController.IsSelectable(c));
                 }
             }
             else if (_current == null)
@@ -208,11 +214,11 @@ namespace PANEGamepad
 
         public bool CustomSceneProcess(KeyCode key)
         {
-            IEnumerable<Component> Components = Scene.GetScene();
-            if (Components.Count() == 1 && key == KeyCode.Mouse0)
+            IEnumerable<GameObject> GameObjects = Scene.GetScene();
+            if (GameObjects.Count() == 1 && key == KeyCode.Mouse0)
             {
                 startCursorPos = Input.mousePosition;
-                MoveCursorToElement(Components.First());
+                MoveCursorToElement(GameObjects.First());
                 SimulateKey(KeyCode.Mouse0, true);
                 SimulateKey(KeyCode.Mouse0, false);
                 needResetPos = true;
