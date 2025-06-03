@@ -146,11 +146,11 @@ namespace PANEGamepad.Scenes.Customization
             Button button = toSelect.GetComponent<Button>();
             button.onClick.Invoke();
 
-            GameObject subPanel = toSelect.transform.GetParent().gameObject;
+            GameObject subPanel = toSelect.GetComponentInParent<Component>().gameObject;
             Button selector = null;
             if (subPanel.name == "SubCategories")
             {
-                selector = subPanel.transform.GetParent().gameObject.GetComponent<Button>();
+                selector = subPanel.GetComponentInParent<Button>();
                 if (!toSelect.name.EndsWith("All") && !subPanel.activeSelf)
                 {
                     selector.onClick.Invoke();

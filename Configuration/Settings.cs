@@ -10,5 +10,7 @@ namespace PANEGamepad.Configuration
         public static readonly float MouseMaxAcceleration = 2f;
         public static readonly float MouseAccelerationRate = 20;
         public static readonly float MouseAccelerationFactor = 10f;
+        public static readonly bool CapMouseMove = true;
+        public static readonly bool TrackGameFocus = true;
     }
 }

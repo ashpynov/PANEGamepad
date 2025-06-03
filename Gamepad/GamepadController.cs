@@ -160,11 +160,34 @@ namespace PANEGamepad.Gamepad
 
             lastThumb = thumb;
 
-            float mouseX = thumb.x * Settings.MouseSpeed * acceleration;
-            float mouseY = -thumb.y * Settings.MouseSpeed * acceleration;
-            if (mouseX != 0 || mouseY != 0)
+            float mouseDX = thumb.x * Settings.MouseSpeed * acceleration;
+            float mouseDY = -thumb.y * Settings.MouseSpeed * acceleration;
+
+            if (Settings.CapMouseMove && (mouseDX != 0 || mouseDY != 0))
             {
-                InputTracker.SimulateMouseMove((int)mouseX, (int)mouseY);
+                Vector2 mousePos = Input.mousePosition;
+                if (mousePos.x + mouseDX < 0)
+                {
+                    mouseDX = -mousePos.x;
+                }
+                else if (mousePos.x + mouseDX >= Screen.width)
+                {
+                    mouseDX = Screen.width - mousePos.x;
+                }
+
+                if (mousePos.y - mouseDY < 0)
+                {
+                    mouseDY = mousePos.y;
+                }
+                else if (mousePos.y - mouseDY >= Screen.height)
+                {
+                    mouseDY = -(Screen.height - mousePos.y);
+                }
+            }
+
+            if (mouseDX != 0 || mouseDY != 0)
+            {
+                InputTracker.SimulateMouseMove((int)mouseDX, (int)mouseDY);
             }
         }
 

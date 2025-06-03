@@ -4,6 +4,8 @@ using UnityEngine;
 using PANEGamepad.Bindings;
 using PANEGamepad.Gamepad;
 using PANEGamepad.Scenes;
+using PANEGamepad.Native;
+using PANEGamepad.Configuration;
 
 
 namespace PANEGamepad
@@ -40,6 +42,11 @@ namespace PANEGamepad
             {
                 Scene.SetFocus(delayedFocusObject);
                 delayedFocus = false;
+            }
+
+            if (Settings.TrackGameFocus && !User32.IsWindowFocused())
+            {
+                return;
             }
 
             GamePad.UpdateFrame();

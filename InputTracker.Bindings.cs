@@ -3,7 +3,6 @@ using PANEGamepad.Bindings;
 using PANEGamepad.Scenes;
 using PANEGamepad.Scenes.Customization;
 
-
 namespace PANEGamepad
 {
     public partial class InputTracker : MonoBehaviour

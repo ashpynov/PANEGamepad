@@ -44,6 +44,9 @@ namespace PANEGamepad
         private void MapFunc(string button, SceneCode sceneCode, Handler onDown) =>
             bindings.Add(new Binding(button, sceneCode: sceneCode, onDown: onDown));
 
+        private void MapFunc(string button, SceneCode sceneCode, Handler onDown, Handler onUp) =>
+            bindings.Add(new Binding(button, sceneCode: sceneCode, onDown: onDown, onUp: onUp));
+
         private void MapFunc(string button, Handler onDown) =>
             bindings.Add(new Binding(button, onDown: onDown));
 

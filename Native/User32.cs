@@ -10,6 +10,12 @@ namespace PANEGamepad.Native
         private static extern System.IntPtr GetActiveWindow();
 
         [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
+        [DllImport("user32.dll")]
         private static extern bool SetCursorPos(int X, int Y);
 
         [DllImport("user32.dll")]
@@ -23,6 +29,20 @@ namespace PANEGamepad.Native
 
         [DllImport("user32.dll")]
         public static extern UInt32 MapVirtualKey(UInt32 uCode, UInt32 uMapType);
+
+        private static int? _currentProcessId;
+        public static bool IsWindowFocused()
+        {
+            _currentProcessId ??= System.Diagnostics.Process.GetCurrentProcess().Id;
+
+            IntPtr activeWindowHandle = GetForegroundWindow();
+            if (activeWindowHandle == IntPtr.Zero)
+            {
+                return false; // No window is focused
+            }
+            GetWindowThreadProcessId(activeWindowHandle, out int activeProcessId);
+            return activeProcessId == _currentProcessId;
+        }
 
         public static void SendMouseKey(KeyCode key, bool down)
         {
