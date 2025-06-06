@@ -65,6 +65,24 @@ namespace PANEGamepad
             }
         }
 
+        private bool SceneKeyDown(KeyCode[] keys)
+        {
+            foreach (KeyCode key in keys)
+            {
+                SceneKeyDown(key);
+            }
+            return true;
+        }
+
+        private bool SceneKeyUp(KeyCode[] keys)
+        {
+            foreach (KeyCode key in keys)
+            {
+                SceneKeyUp(key);
+            }
+            return true;
+        }
+
         private bool SceneKeyDown(KeyCode key)
         {
             if (!CustomSceneProcess(key))

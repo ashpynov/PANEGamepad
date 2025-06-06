@@ -54,6 +54,5 @@ namespace PANEGamepad.Scenes.Customization
 
             return scene;
         }
-
     }
 }

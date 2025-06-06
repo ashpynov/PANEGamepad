@@ -101,7 +101,20 @@ namespace PANEGamepad.Scenes
             if (GetSceneCode() == sceneCode)
             {
                 GameObject component = GetScene().FirstOrDefault(c => c.name == buttonName);
-                return PressButton(component.gameObject);
+                if (component != null)
+                {
+                    return PressButton(component.gameObject);
+                }
+                else
+                {
+                    GameObject go = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(c => c.name == buttonName);
+                    if (go != null)
+                    {
+                        Plugin.Log.LogInfo($"Found button {go.name}, {SceneController.GetPathString(go)}");
+                        PressButton(go);
+                        return true;
+                    }
+                }
             }
             return false;
         }

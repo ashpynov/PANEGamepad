@@ -119,6 +119,33 @@ namespace PANEGamepad.Scenes
             return pathStack.ToArray();
         }
 
+        public static GameObject[] GetParents(GameObject gameObject)
+        {
+            if (gameObject == null)
+            {
+                return [];
+            }
+
+            List<GameObject> parents = new();
+            Transform current = gameObject.transform;
+
+            while (current != null)
+            {
+                current = current.parent;
+                if (current != null)
+                {
+                    parents.Add(current.gameObject);
+                }
+
+            }
+            return parents.ToArray();
+        }
+
+        public static string GetPathString(GameObject gameObject)
+        {
+            return string.Join("/", GetPath(gameObject));
+        }
+
         public static void EnsureVisible(GameObject control)
         {
             Vector2 margin = new Vector2(30, 30);

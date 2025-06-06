@@ -71,6 +71,18 @@ namespace PANEGamepad.Native
                 return;
             }
 
+            if (key is KeyCode.Mouse5)
+            {
+                SendMouseWheel(-60);
+                return;
+            }
+
+            if (key is KeyCode.Mouse6)
+            {
+                SendMouseWheel(60);
+                return;
+            }
+
             uint keyCode = VirtualKeyCodes.FromKeyCode(key);
             INPUT input = new()
             {
@@ -115,6 +127,26 @@ namespace PANEGamepad.Native
 
             // mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
         }
+        public static void SendMouseWheel(int dx)
+        {
+            INPUT input = new()
+            {
+                Type = InputType.Mouse,
+                Data =
+                {
+                    Mouse = new MOUSEINPUT()
+                    {
+                        Flags = MOUSEEVENTF_WHEEL,
+                        MouseData = (uint)dx
+                    }
+                }
+            };
+            Plugin.Log.LogInfo($"Mouse wheel {dx}");
+            _ = User32.SendInput(1, [input], Marshal.SizeOf<INPUT>());
+
+            // mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
+        }
+
         public static Rect GetActiveWindowRect()
         {
             System.IntPtr hwnd = User32.GetActiveWindow(); // Handle to the Unity game window

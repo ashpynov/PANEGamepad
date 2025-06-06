@@ -15,26 +15,43 @@ namespace PANEGamepad
             // MapKey(KeyCode.Mouse0, KeyCode.Mouse0);
             // MapKey(KeyCode.Mouse1, KeyCode.Mouse1);
 
-            MapKey("RSUp", KeyCode.W);                                      // Camera Up (W)
-            MapKey("RSLeft", KeyCode.A);                                    // Camera Left (A)
-            MapKey("RSDown", KeyCode.S);                                    // Camera Right (S)
-            MapKey("RSRight", KeyCode.D);                                   // Camera Down (D)
+            MapKey("RSUp", KeyCode.W, MainGameScene.Code);                  // Camera Up (W)
+            MapKey("RSLeft", KeyCode.A, MainGameScene.Code);                // Camera Left (A)
+            MapKey("RSDown", KeyCode.S, MainGameScene.Code);                // Camera Right (S)
+            MapKey("RSRight", KeyCode.D, MainGameScene.Code);               // Camera Down (D)
 
-            MapKey("RT", KeyCode.LeftControl, MainGameScene.Code);          // Pick building (LeftControl)
-            MapKey("X", KeyCode.R, MainGameScene.Code);                     // Rotate
-            MapKey("Y", "Undo", MainGameScene.Code);                        // Undo
+            MapKeys("X", [KeyCode.LeftControl, KeyCode.Mouse0], MainGameScene.Code);          // Pick building (LeftControl)
+            MapKey("Y", KeyCode.R, MainGameScene.Code);                     // Rotate
+            MapKey("LT + Start", "Undo", MainGameScene.Code);               // Undo
             MapKey("LB", "Pause", MainGameScene.Code);                      // Pause
             MapKey("RB", "NormalSpeed", MainGameScene.Code);                // Resume
             MapKey("LT + LB", "LowSpeed", MainGameScene.Code);              // Slower
             MapKey("LT + RB", "HighSpeed", MainGameScene.Code);             // Faster
 
+            MapKey("RT + LT + Start", KeyCode.F9, MainGameScene.Code);       // Load
+            MapKey("RT + LT + Back", KeyCode.F5, MainGameScene.Code);       // Save
+
             MapKey("LT + A", "House", MainGameScene.Code);                  // House
             MapKey("LT + B", "Remove", MainGameScene.Code);                 // Remove
             MapKey("LT + X", "Road", MainGameScene.Code);                   // Road
             MapKey("LT + Y", "Roadblock", MainGameScene.Code);              // Roadblock
+            MapKey("RT + A", "Gardens", MainGameScene.Code);                // Gardens
+            MapKey("RT + B", "Plaza", MainGameScene.Code);                  // Plaza
+            MapKey("RT + X", "Firehouse", MainGameScene.Code);              // Firepost
+            MapKey("RT + Y", "ArchitectPost", MainGameScene.Code);          // Architect
+
+
             MapKey("Menu", "MenuButton", MainGameScene.Code);               // Menu
             MapKey("LS", "FlatToggle", MainGameScene.Code);                 // Flat Mode
             MapKey("LT + LS", "GridToggle", MainGameScene.Code);            // Grid Mode
+            MapKey("LT + RSDown", KeyCode.Mouse5, MainGameScene.Code);      // Zoom In
+            MapKey("LT + RSUp", KeyCode.Mouse6, MainGameScene.Code);        // Zoom Out
+
+            MapKey("RSDown", KeyCode.Mouse5);                               // ScrollDown
+            MapKey("RSUp", KeyCode.Mouse6);                                 // ScrollUp
+
+
+            MapKey("LT + Left", "commerce", MainGameScene.Code);            // Commerse overseer
 
             MapFunc("LT + Up", MainGameScene.Code, OverlayController.PreviousOverlay);  // Switch to previouse overlay
             MapFunc("LT + Down", MainGameScene.Code, OverlayController.NextOverlay);    // Switch to next overlay
