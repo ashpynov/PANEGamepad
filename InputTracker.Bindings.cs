@@ -65,6 +65,7 @@ namespace PANEGamepad
             MapFunc("Back", MainGameScene.Code, OverseersScene.OpenLast);   // Open overseers
 
             MapFunc("A", SceneCode.SingleConfirm, SingleConfirmScene.PressConfirm);  // Confirm on A
+            MapFunc("B", SceneCode.SingleConfirm, SingleConfirmScene.PressConfirm);  // Confirm on B too
 
             MapFunc("LT + Up", OverseersScene.Code, OverseersScene.Previous);
             MapFunc("LT + Down", OverseersScene.Code, OverseersScene.Next);
