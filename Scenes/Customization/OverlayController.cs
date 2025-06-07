@@ -139,19 +139,20 @@ namespace PANEGamepad.Scenes.Customization
                 panel.GetComponentInParent<Button>().onClick.Invoke();
             }
 
-            Button button = toSelect.GetComponent<Button>();
-            button.onClick.Invoke();
+            GameObject subPanel = toSelect.transform.parent.gameObject;
 
-            GameObject subPanel = toSelect.GetComponentInParent<Component>().gameObject;
             Button selector = null;
             if (subPanel.name == "SubCategories")
             {
                 selector = subPanel.GetComponentInParent<Button>();
                 if (!toSelect.name.EndsWith("All") && !subPanel.activeSelf)
                 {
-                    selector.onClick.Invoke();
+                    selector?.onClick.Invoke();
                 }
             }
+
+            Button button = toSelect.GetComponent<Button>();
+            button.onClick.Invoke();
 
             if (GameObject.Find(OverlaySelectorsPath) is GameObject selectorButtons)
             {

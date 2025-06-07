@@ -136,6 +136,7 @@ namespace PANEGamepad.Scenes
             {
                 PointerEventData pointerData = new(EventSystem.current)
                 {
+                    pointerEnter = enter,
                     position = enter.GetComponent<RectTransform>().position
                 };
                 ExecuteEvents.Execute(enter, pointerData, ExecuteEvents.pointerEnterHandler);
