@@ -51,5 +51,7 @@ namespace PANEGamepad
     public static class Types
     {
         public static readonly Type TMPro_DropdownItem = AccessTools.TypeByName("TMPro.TMP_Dropdown+DropdownItem");
+        public static readonly Type WorldMapCity = AccessTools.TypeByName("WorldMapCity");
+        public static readonly Type WorldMapCityState = AccessTools.TypeByName("WorldMapCityState");
     }
 }

@@ -27,7 +27,7 @@ namespace PANEGamepad
             rhs.z = 0;
 
             float projectionNorm = Vector3.Dot(direction, rhs.normalized);
-            float angleFactor = 10f;
+            float angleFactor = 2f;
             if (!(projectionNorm <= 0.001f) && rhs.sqrMagnitude < maxSqrMagnitude)
             {
                 float angleScale = 1 / (1 + angleFactor - (angleFactor * projectionNorm * projectionNorm));
@@ -112,14 +112,14 @@ namespace PANEGamepad
             }
             candidates.Sort((a, b) => b.proximityFactor.CompareTo(a.proximityFactor));
 
-            // if (from != null)
-            // {
-            //     Plugin.Log.LogInfo($"From: {from.name}:");
-            // }
-            // foreach (Proximity p in candidates.Take(10))
-            // {
-            //     Plugin.Log.LogInfo($"      Proximity Candidates: {p.gameObject.name}: {p.proximityFactor} : {SceneController.IsSelectable(p.gameObject, from)}");
-            // }
+            if (from != null)
+            {
+                Plugin.Log.LogInfo($"From: {from.name}:");
+            }
+            foreach (Proximity p in candidates.Take(10))
+            {
+                Plugin.Log.LogInfo($"      Proximity Candidates: {p.gameObject.name}: {p.proximityFactor} : {SceneController.IsSelectable(p.gameObject, from)}");
+            }
             return candidates.FirstOrDefault(c => SceneController.IsSelectable(c.gameObject, from))?.gameObject;
         }
 

@@ -73,27 +73,20 @@ namespace PANEGamepad.Scenes
 
         public IEnumerable<GameObject> GetScene(object filter, object filter2 = null)
         {
-            if (_filtered == null)
+            _filtered ??= GetSceneCode() switch
             {
-                if (GetSceneCode() == MainGameScene.Code)
-                {
-                    _filtered = MainGameScene.Filter(GetScene(), filter, filter2);
-                }
-                else if (GetSceneCode() == DropdownScene.Code)
-                {
-                    _filtered = DropdownScene.Filter(GetScene());
-                }
-                else
-                {
-                    _filtered = GetScene();
-                }
-            }
+                MainGameScene.Code => MainGameScene.Filter(GetScene(), filter, filter2),
+                DropdownScene.Code => DropdownScene.Filter(GetScene()),
+                WorldMapScene.Code => WorldMapScene.Filter(GetScene()),
+                _ => GetScene(),
+            };
             return _filtered;
         }
 
         private SceneCode DetectScene(IEnumerable<GameObject> scene)
         {
             return
+                WorldMapScene.Taste(scene) ? WorldMapScene.Code :
                 DropdownScene.Taste(scene) ? DropdownScene.Code :
                 OverseersScene.Taste(scene) ? OverseersScene.Code :
                 SingleConfirmScene.Taste(scene) ? SceneCode.SingleConfirm :
