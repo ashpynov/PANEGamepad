@@ -10,9 +10,9 @@ namespace PANEGamepad
     {
         private GameObject _current;
 
-        public class Proximity(GameObject component, float proximityFactor)
+        public class Proximity(GameObject gameObject, float proximityFactor)
         {
-            public GameObject component = component;
+            public GameObject gameObject = gameObject;
             public float proximityFactor = proximityFactor;
         }
 
@@ -59,16 +59,16 @@ namespace PANEGamepad
             );
         }
 
-        public static GameObject GetHoveredGameObject(IEnumerable<GameObject> GameObjects)
+        public static GameObject GetHoveredGameObject()
         {
             Vector3 position = Input.mousePosition;
-            return GameObjects.FirstOrDefault(c => IsPositionInGameObject(position, c.gameObject))?.gameObject;
+            return SceneController.GetTopObject(position);
         }
 
         public static bool IsHovered(GameObject go)
         {
             Vector3 position = Input.mousePosition;
-            return IsPositionInGameObject(position, go);
+            return SceneController.GetTopObject(position) == go;
         }
 
         public static GameObject FindGameObject(IEnumerable<GameObject> GameObjects, GameObject from, Vector3 dir, float maxDistance = float.PositiveInfinity)
@@ -111,7 +111,16 @@ namespace PANEGamepad
                 }
             }
             candidates.Sort((a, b) => b.proximityFactor.CompareTo(a.proximityFactor));
-            return candidates.FirstOrDefault(c => SceneController.IsSelectable(c.component, from))?.component;
+
+            // if (from != null)
+            // {
+            //     Plugin.Log.LogInfo($"From: {from.name}:");
+            // }
+            // foreach (Proximity p in candidates.Take(10))
+            // {
+            //     Plugin.Log.LogInfo($"      Proximity Candidates: {p.gameObject.name}: {p.proximityFactor} : {SceneController.IsSelectable(p.gameObject, from)}");
+            // }
+            return candidates.FirstOrDefault(c => SceneController.IsSelectable(c.gameObject, from))?.gameObject;
         }
 
         private static Vector3 GetPointOnRectEdge(RectTransform rect, Vector2 dir)
@@ -134,7 +143,7 @@ namespace PANEGamepad
         private Vector2 startCursorPos;
         private void MoveCursorToElement(GameObject button)
         {
-            SceneController.EnsureVisible(button.gameObject);
+            SceneController.EnsureVisible(button);
             lastCursorPos = SceneController.VisiblePoint(button);
             SetCursorPos(lastCursorPos);
         }
@@ -170,7 +179,7 @@ namespace PANEGamepad
                 return false;
             }
 
-            _current ??= GetHoveredGameObject(GameObjects);
+            _current ??= GetHoveredGameObject();
 
             GameObject _previuos = _current;
             bool found = false;

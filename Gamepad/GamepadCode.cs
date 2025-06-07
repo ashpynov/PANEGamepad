@@ -2,6 +2,7 @@ namespace PANEGamepad.Gamepad
 {
     public enum GamepadCode
     {
+        None = 0,
         DPadUp,
         DPadDown,
         DPadLeft,

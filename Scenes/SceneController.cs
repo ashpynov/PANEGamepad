@@ -18,6 +18,7 @@ namespace PANEGamepad.Scenes
         private GameObject _focused = null;
         private int _lastSelectablesCount = 0;
 
+        private static readonly string[] CustomTypes = ["ButtonWithHover", "GameModeWidget", "MapEntry", "WorldMapCity"];
 
         public void Invalidate(bool force = false)
         {
@@ -38,7 +39,7 @@ namespace PANEGamepad.Scenes
                 _sceneCode = DetectScene(GetScene());
                 if (_sceneCode != _previousScene)
                 {
-                    InputTracker.SetFocus(null);
+                    InputTracker.SetFocused(null);
                     _previousScene = _sceneCode;
                 }
             }
@@ -58,7 +59,7 @@ namespace PANEGamepad.Scenes
                 _sceneCode = DetectScene(GetScene());
                 if (_sceneCode != _previousScene)
                 {
-                    InputTracker.SetFocus(null);
+                    InputTracker.SetFocused(null);
                     _previousScene = _sceneCode;
                 }
             }
@@ -74,9 +75,13 @@ namespace PANEGamepad.Scenes
         {
             if (_filtered == null)
             {
-                if (GetSceneCode() == SceneCode.MainGame)
+                if (GetSceneCode() == MainGameScene.Code)
                 {
                     _filtered = MainGameScene.Filter(GetScene(), filter, filter2);
+                }
+                else if (GetSceneCode() == DropdownScene.Code)
+                {
+                    _filtered = DropdownScene.Filter(GetScene());
                 }
                 else
                 {
@@ -89,7 +94,8 @@ namespace PANEGamepad.Scenes
         private SceneCode DetectScene(IEnumerable<GameObject> scene)
         {
             return
-                OverseersScene.Taste(scene) ? SceneCode.Overseers :
+                DropdownScene.Taste(scene) ? DropdownScene.Code :
+                OverseersScene.Taste(scene) ? OverseersScene.Code :
                 SingleConfirmScene.Taste(scene) ? SceneCode.SingleConfirm :
                 SceneController.SceneMatch(scene, ["Play", "Continue", "Exit"]) ? SceneCode.Title :
                 MainGameScene.Taste(scene) ? SceneCode.MainGame :
@@ -110,26 +116,10 @@ namespace PANEGamepad.Scenes
                     GameObject go = Resources.FindObjectsOfTypeAll<GameObject>().FirstOrDefault(c => c.name == buttonName);
                     if (go != null)
                     {
-                        Plugin.Log.LogInfo($"Found button {go.name}, {SceneController.GetPathString(go)}");
                         PressButton(go);
                         return true;
                     }
                 }
-            }
-            return false;
-        }
-
-        public static bool PressButton(GameObject go)
-        {
-            if (go != null && go.GetComponent<Button>() is Button button)
-            {
-                button.onClick.Invoke();
-                return true;
-            }
-            else if (go != null && go.GetComponent("CustomToggle") as MonoBehaviour is MonoBehaviour toggle)
-            {
-                toggle.Invoke("OnToggleClick", 0f);
-                return true;
             }
             return false;
         }
@@ -164,12 +154,9 @@ namespace PANEGamepad.Scenes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "<Pending>")]
         private IEnumerable<GameObject> GetSceneGameObjects(Vector2 direction = default)
         {
-
-
             List<GameObject> components = new();
             components.AddRange(Selectable.allSelectablesArray.Where(c => c.interactable).Select(c => c.gameObject));
 
-            string[] CustomTypes = ["ButtonWithHover", "GameModeWidget", "MapEntry", "WorldMapCity"];
             components.AddRange(GameObject.FindObjectsOfType<MonoBehaviour>()
                 .Where(c => CustomTypes.Contains(c.GetType().Name))
                 .Select(c => c.gameObject));

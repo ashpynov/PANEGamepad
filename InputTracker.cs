@@ -103,10 +103,16 @@ namespace PANEGamepad
             return true;
         }
 
-        public static void SetFocus(GameObject go)
+        public static void SetFocused(GameObject go)
         {
             delayedFocus = true;
             delayedFocusObject = go;
+        }
+        public static void SetMoused(GameObject go)
+        {
+            Plugin.Log.LogInfo($"SetMoused {go.name}");
+            SceneController.EnsureVisible(go);
+            SetCursorPos(SceneController.CenterPoint(go));
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using PANEGamepad.Extensions;
 using UnityEngine;
 
 namespace PANEGamepad.Scenes.Customization
@@ -19,7 +20,7 @@ namespace PANEGamepad.Scenes.Customization
             {
                 return null;
             }
-            string[] path = SceneController.GetPath(component.gameObject);
+            string[] path = component.gameObject.GetPath();
             return path.Length >= 4 && path[2] == "Bars" ? path[3] : null;
         }
 

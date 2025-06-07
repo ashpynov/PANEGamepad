@@ -15,6 +15,8 @@ namespace PANEGamepad
             // MapKey(KeyCode.Mouse0, KeyCode.Mouse0);
             // MapKey(KeyCode.Mouse1, KeyCode.Mouse1);
 
+            MapFunc("A", DropdownScene.Code, DropdownScene.SelectDropdown);  // Select on dropdowns
+            MapFunc("B", DropdownScene.Code, DropdownScene.CloseDropdown);   // Close dropdowns
             MapKey("RSUp", KeyCode.W, MainGameScene.Code);                  // Camera Up (W)
             MapKey("RSLeft", KeyCode.A, MainGameScene.Code);                // Camera Left (A)
             MapKey("RSDown", KeyCode.S, MainGameScene.Code);                // Camera Right (S)

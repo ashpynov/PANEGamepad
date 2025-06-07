@@ -51,6 +51,7 @@ namespace PANEGamepad.Gamepad
                 return;
             }
 
+            states[(int)GamepadCode.None] = 1.0f;
             states[(int)GamepadCode.DPadUp] = StateToValue(state.DPad.Up);
             states[(int)GamepadCode.DPadDown] = StateToValue(state.DPad.Down);
             states[(int)GamepadCode.DPadLeft] = StateToValue(state.DPad.Left);
@@ -107,7 +108,7 @@ namespace PANEGamepad.Gamepad
                 Plugin.Log.LogInfo($"GamePad Connected");
             }
 
-            if (vibrationFrames != 0)
+            if (vibrationFrames != 0 && Settings.VibrationOnConnect)
             {
                 if (vibrationFrames % 5 == 0)
                 {

@@ -48,4 +48,8 @@ namespace PANEGamepad
             return _tooltipField is null || _tooltipField.GetValue(__instance) != null;
         }
     }
+    public static class Types
+    {
+        public static readonly Type TMPro_DropdownItem = AccessTools.TypeByName("TMPro.TMP_Dropdown+DropdownItem");
+    }
 }

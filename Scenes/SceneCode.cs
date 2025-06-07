@@ -7,6 +7,7 @@ namespace PANEGamepad.Scenes
         Title,
         MainGame,
         SingleConfirm,
-        Overseers
+        Overseers,
+        Dropdown
     }
 }

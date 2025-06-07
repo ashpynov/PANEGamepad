@@ -70,7 +70,6 @@ namespace PANEGamepad.Scenes.Customization
         {
             List<GameObject> buttons = new();
 
-            Plugin.Log.LogInfo($"GetOverseed {name}");
             GameObject button = GameObject.Find("Canvas/UI/Bars/LeftBar/OverseerButton");
             if (button == null || !button.activeInHierarchy)
             {
@@ -126,10 +125,9 @@ namespace PANEGamepad.Scenes.Customization
                     }
                     SceneController.PressButton(selector);
                     Canvas.ForceUpdateCanvases();
-                    InputTracker.SetFocus(selector);
+                    InputTracker.SetFocused(selector);
                     InputTracker.Scene.SetSceneCode(Code);
                     _lastOverseer = OverseersButton.FirstOrDefault(p => p.Value == selector.name).Key;
-                    Plugin.Log.LogInfo($"current {_lastOverseer}");
                     return true;
                 }
                 catch
@@ -206,7 +204,7 @@ namespace PANEGamepad.Scenes.Customization
             if (idx != -1)
             {
                 SceneController.PressButton(buttons[idx]);
-                InputTracker.SetFocus(buttons[idx]);
+                InputTracker.SetFocused(buttons[idx]);
 
                 _lastOverseer = OverseersButton.FirstOrDefault(p => p.Value == buttons[idx].name).Key;
                 return true;

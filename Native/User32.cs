@@ -141,10 +141,7 @@ namespace PANEGamepad.Native
                     }
                 }
             };
-            Plugin.Log.LogInfo($"Mouse wheel {dx}");
             _ = User32.SendInput(1, [input], Marshal.SizeOf<INPUT>());
-
-            // mouse_event(MOUSEEVENTF_MOVE, dx, dy, 0, 0);
         }
 
         public static Rect GetActiveWindowRect()

@@ -12,5 +12,6 @@ namespace PANEGamepad.Configuration
         public static readonly float MouseAccelerationFactor = 10f;
         public static readonly bool CapMouseMove = true;
         public static readonly bool TrackGameFocus = true;
+        public static readonly bool VibrationOnConnect = true;
     }
 }

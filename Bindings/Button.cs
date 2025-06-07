@@ -19,12 +19,12 @@ namespace PANEGamepad.Bindings
 
         public Button(string buttonName)
         {
-            buttonCode = (GamepadCode)(((int)System.Enum.Parse(typeof(GamepadCode), buttonName, ignoreCase: true)) % (int)GamepadCode.Count);
+            buttonCode = (buttonName == "") ? GamepadCode.None : (GamepadCode)(((int)System.Enum.Parse(typeof(GamepadCode), buttonName, ignoreCase: true)) % (int)GamepadCode.Count);
         }
 
         public new string ToString()
         {
-            return buttonCode != GamepadCode.Count ? buttonCode.ToString() : keyCode.ToString();
+            return buttonCode != GamepadCode.Count ? (buttonCode == GamepadCode.None ? "" : buttonCode.ToString()) : keyCode.ToString();
         }
 
         public int Code => 1 + (int)buttonCode + ((int)keyCode * (int)GamepadCode.Count);

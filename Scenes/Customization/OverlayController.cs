@@ -71,10 +71,6 @@ namespace PANEGamepad.Scenes.Customization
             int first = buttons.FindIndex(IsEnabled);
             int last = buttons.FindLastIndex(IsEnabled);
 
-            if (first != last)
-            {
-                Plugin.Log.LogInfo($"unknown overlay is enabled {buttons[first].name} or {buttons[last].name}");
-            }
             return first == last ? first : -1;
 
         }
@@ -168,11 +164,11 @@ namespace PANEGamepad.Scenes.Customization
 
             if (selector != null && button.name.EndsWith("All"))
             {
-                InputTracker.SetFocus(selector.gameObject);
+                InputTracker.SetFocused(selector.gameObject);
             }
             else
             {
-                InputTracker.SetFocus(button.gameObject);
+                InputTracker.SetFocused(button.gameObject);
             }
 
             return true;
