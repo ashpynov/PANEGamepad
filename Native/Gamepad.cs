@@ -261,7 +261,7 @@ namespace PANEGamepad.Native
     {
         public static GamePadState GetState(PlayerIndex playerIndex)
         {
-            return GetState(playerIndex, GamePadDeadZone.IndependentAxes);
+            return GetState(playerIndex, GamePadDeadZone.None);
         }
 
         public static GamePadState GetState(PlayerIndex playerIndex, GamePadDeadZone deadZone)

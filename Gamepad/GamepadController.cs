@@ -1,15 +1,11 @@
 using PANEGamepad.Configuration;
 using UnityEngine;
-using System;
 using PANEGamepad.Native;
 
 namespace PANEGamepad.Gamepad
 {
     public class GamepadController
     {
-        private Vector2 lastThumb;
-        private float acceleration = 1.0f;
-
         public GamepadController()
         {
             ResetState(currentValue);
@@ -144,25 +140,25 @@ namespace PANEGamepad.Gamepad
             return ValueToValue(currentValue[(int)button]);
         }
 
+        private float CubicSmooth(float v)
+        {
+            float sign = v < 0 ? -1f : 1f;
+            float t = Mathf.Abs(v);
+            return sign * Mathf.Clamp((6 * Mathf.Pow(t, 5)) - (15 * Mathf.Pow(t, 4)) + (10 * Mathf.Pow(t, 3)), 0, 1);
+        }
+
+        private float Smooth(float v)
+        {
+            return v;
+        }
+
         public void MoveMouse()
         {
             Vector2 thumb = new(GetValue(GamepadCode.LeftStickX), GetValue(GamepadCode.LeftStickY));
 
-            float acc = Vector2.Dot(thumb, lastThumb);
-            if (acc > 0)
-            {
-                float len = thumb.sqrMagnitude;
-                acceleration = Math.Min(acceleration + (float)(acc / Settings.MouseAccelerationRate * Math.Exp(Settings.MouseAccelerationFactor * len) / Math.Exp(Settings.MouseAccelerationFactor)), Settings.MouseMaxAcceleration);
-            }
-            else
-            {
-                acceleration = 1;
-            }
 
-            lastThumb = thumb;
-
-            float mouseDX = thumb.x * Settings.MouseSpeed * acceleration;
-            float mouseDY = -thumb.y * Settings.MouseSpeed * acceleration;
+            float mouseDX = Smooth(thumb.x) * Settings.MouseSpeed;
+            float mouseDY = -Smooth(thumb.y) * Settings.MouseSpeed;
 
             if (Settings.CapMouseMove && (mouseDX != 0 || mouseDY != 0))
             {

@@ -97,6 +97,8 @@ Thats it. If you have feedback or would like to suggest some new feature - welco
 # TODO:
 Here my thoughts what can be improved:
 
+- Mission map city selector to chhose not trading cities
+
 - Order screen buttons: x - accept none, y - accept all
 - Commerce Overseer screen buttons: LB / RB - change amount, x - collect, y - open route
 - Option to focus at default on scene enter
