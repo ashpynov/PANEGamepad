@@ -89,7 +89,7 @@ Installation are [simple](https://docs.bepinex.dev/articles/user_guide/installat
 
 
 ### 2. PANEGamepad.dll
-Download PANEGamepad.dll from [release page](https://github.com/ashpynov/PANEGamepad/releases) and put it into Pharaoh A New Era/BepInEx/plugins folder.
+Download PANEGamepad.dll from [release page](https://github.com/ashpynov/PANEGamepad/releases/latest) and put it into Pharaoh A New Era/BepInEx/plugins folder.
 
 Thats it. If you have feedback or would like to suggest some new feature - welcome to [issues page](https://github.com/ashpynov/PANEGamepad/issues).
 

@@ -46,7 +46,7 @@
 
     <PropertyGroup Condition="'$(Configuration)'=='Pack'">
         <DebugType>none</DebugType>
-        <OutputPath>obj/$(Configuration)/bin</OutputPath>
+        <OutputPath>obj/$(Configuration)/bin/$(Version)/</OutputPath>
         <Optimize>True</Optimize>
     </PropertyGroup>
 
