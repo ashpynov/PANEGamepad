@@ -15,7 +15,7 @@ namespace PANEGamepad
             // MapKey(KeyCode.Mouse0, KeyCode.Mouse0);
             // MapKey(KeyCode.Mouse1, KeyCode.Mouse1);
 
-            MapKey("X", "CommerceOverseerButton", WorldMapScene.Code);      // Choose Overseer
+            MapKey("View", "CommerceOverseerButton", WorldMapScene.Code);      // Choose Overseer
 
             MapFunc("A", DropdownScene.Code, DropdownScene.SelectDropdown); // Select on dropdowns
             MapFunc("B", DropdownScene.Code, DropdownScene.CloseDropdown);  // Close dropdowns
