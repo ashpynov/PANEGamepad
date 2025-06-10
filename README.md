@@ -1,3 +1,5 @@
+![DownloadCountTotal](https://img.shields.io/github/downloads/ashpynov/PANEGamepad/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/ashpynov/PANEGamepad/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/ashpynov/PANEGamepad?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/ashpynov/PANEGamepad?style=plastic)
+
 # Pharaoh: A New Era Gamepad support Mod
 
 Greetings to thee, O Pharaoh,
