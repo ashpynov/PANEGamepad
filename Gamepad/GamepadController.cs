@@ -1,16 +1,81 @@
 using PANEGamepad.Configuration;
 using UnityEngine;
 using PANEGamepad.Native;
+using System.Threading;
+using System;
 
 namespace PANEGamepad.Gamepad
 {
-    public class GamepadController
+    public class GamepadController : IDisposable
     {
+        private readonly Thread _inputThread;
+        private readonly object _framelock = new object();
+        private bool _shouldRun = true;
+
+        public Rect _screenRect = new Rect(0, 0, 0, 0);
+        public Rect ScreenRect
+        {
+            get
+            {
+                lock (_framelock)
+                {
+                    return _screenRect;
+                }
+            }
+            set
+            {
+                lock (_framelock)
+                {
+                    _screenRect = value;
+                }
+            }
+        }
+
         public GamepadController()
         {
+
             ResetState(currentValue);
             ResetState(previousValue);
+
+            _inputThread = new Thread(InputUpdateLoop)
+            {
+                IsBackground = true,
+                Priority = System.Threading.ThreadPriority.AboveNormal
+            };
+            _inputThread.Start();
         }
+        private void InputUpdateLoop()
+        {
+            while (_shouldRun)
+            {
+                if (Settings.TrackGameFocus && !User32.IsWindowFocused())
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+
+                GamePadState state = GamePad.GetState(playerIndex);
+
+                if (!state.IsConnected)
+                {
+                    Thread.Sleep(1000);
+                    continue;
+                }
+
+                MoveMouse(state.ThumbSticks.Left.X, state.ThumbSticks.Left.Y, ScreenRect);
+                Thread.Sleep(16);
+            }
+        }
+
+        public void Dispose()
+        {
+            _shouldRun = false;
+            if (_inputThread != null && _inputThread.IsAlive)
+            {
+                _inputThread.Join(1000);
+            }
+        }
+
         private int vibrationFrames = 0;
 
         private bool IsConnected = false;
@@ -81,6 +146,9 @@ namespace PANEGamepad.Gamepad
 
         public void UpdateFrame()
         {
+            Vector2 offset = InputTracker.UnityScreenToWindows(new Vector2(0, Screen.height));
+            ScreenRect = new(offset, new Vector2(Screen.width, Screen.height));
+
             GamePadState state = GamePad.GetState(playerIndex);
 
             if (!IsConnected && !state.IsConnected)
@@ -152,33 +220,36 @@ namespace PANEGamepad.Gamepad
             return v;
         }
 
-        public void MoveMouse()
+        public void MoveMouse(float dx, float dy, Rect screen)
         {
-            Vector2 thumb = new(GetValue(GamepadCode.LeftStickX), GetValue(GamepadCode.LeftStickY));
-
-
-            float mouseDX = Smooth(thumb.x) * Settings.MouseSpeed;
-            float mouseDY = -Smooth(thumb.y) * Settings.MouseSpeed;
-
-            if (Settings.CapMouseMove && (mouseDX != 0 || mouseDY != 0))
+            if (screen.width == 0)
             {
-                Vector2 mousePos = Input.mousePosition;
-                if (mousePos.x + mouseDX < 0)
+                return;
+            }
+
+            float screenScale = screen.height / 1080;
+            float mouseDX = Smooth(dx) * Settings.MouseSpeed * screenScale;
+            float mouseDY = -Smooth(dy) * Settings.MouseSpeed * screenScale;
+
+            if (Settings.CapMouseMove && (mouseDX != 0 || mouseDY != 0) && screen.width != 0)
+            {
+                Vector2 mousePos = User32.GetCursorPos();
+                if (mousePos.x + mouseDX <= screen.min.x)
                 {
-                    mouseDX = -mousePos.x;
+                    mouseDX = screen.min.x - mousePos.x;
                 }
-                else if (mousePos.x + mouseDX >= Screen.width)
+                else if (mousePos.x + mouseDX >= screen.max.x)
                 {
-                    mouseDX = Screen.width - mousePos.x;
+                    mouseDX = screen.max.x - mousePos.x - 1;
                 }
 
-                if (mousePos.y - mouseDY < 0)
+                if (mousePos.y + mouseDY <= screen.min.y)
                 {
-                    mouseDY = mousePos.y;
+                    mouseDY = screen.min.y - mousePos.y;
                 }
-                else if (mousePos.y - mouseDY >= Screen.height)
+                else if (mousePos.y + mouseDY >= screen.max.y)
                 {
-                    mouseDY = -(Screen.height - mousePos.y);
+                    mouseDY = screen.max.y - mousePos.y - 1;
                 }
             }
 

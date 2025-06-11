@@ -53,7 +53,6 @@ namespace PANEGamepad
             Scene.Invalidate();
             Scene.CheckSceneChanged(needDetectScene);
             needDetectScene = false;
-            GamePad.MoveMouse();
             Binding.Prosess(bindings);
 
             if (Input.GetKeyUp(KeyCode.Mouse0)

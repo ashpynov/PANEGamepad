@@ -19,6 +19,9 @@ namespace PANEGamepad.Native
         private static extern bool SetCursorPos(int X, int Y);
 
         [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out POINT lpPoint);
+
+        [DllImport("user32.dll")]
         private static extern bool GetWindowRect(System.IntPtr hwnd, out RECT lpRect); // Gets window bounds in screen coordinates
 
         [DllImport("user32.dll")]
@@ -158,6 +161,11 @@ namespace PANEGamepad.Native
         public static bool SetCursorPos(Vector2Int pos)
         {
             return User32.SetCursorPos(pos.x, pos.y);
+        }
+        public static Vector2 GetCursorPos()
+        {
+            User32.GetCursorPos(out POINT point);
+            return new Vector2(point.X, point.Y);
         }
 
     }
