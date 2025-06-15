@@ -34,15 +34,15 @@ Almost everytime gamepad just mimic keyboard or mouse pressing, with some adopta
 |Y          | Rotate building*
 |Menu       | Game Menu
 |View       | Open overseers (last)
-|LT + A     | House
-|LT + B     | Remove
-|LT + X     | Road
-|LT + Y     | Roadblock
-|RT + A     | Gardens
-|RT + B     | Plaza
-|RT + X     | Firehouse
-|RT + Y     | Architect Post
-|LT + Menu  | Undo
+|RT + A     | House
+|RT + B     | Remove
+|RT + X     | Road
+|RT + Left  | Pick previous building
+|RT + Right | Pick next building
+|RT + Up    | Pick previous category
+|RT + Down  | Pick next category
+|RT + RightStick | Move right stick in 9 angles around to pick category
+|RT + Menu  | Undo
 |LB         | Pause
 |RB         | Normal Speed
 |LT + LB    | Slower

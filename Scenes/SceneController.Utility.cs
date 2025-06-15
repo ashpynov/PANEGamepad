@@ -146,6 +146,11 @@ namespace PANEGamepad.Scenes
             {
                 return false;
             }
+            return !IsLocked(obj);
+        }
+
+        public static bool IsLocked(GameObject obj)
+        {
             // Locked property
             // Check if the component has a 'Locked' field/property
             Component[] components = obj.GetComponents<Component>();
@@ -158,15 +163,16 @@ namespace PANEGamepad.Scenes
 
                 if (lockedField != null && lockedField.FieldType == typeof(bool))
                 {
-                    return !(bool)lockedField.GetValue(component);
+                    return (bool)lockedField.GetValue(component);
                 }
                 else if (lockedProperty != null && lockedProperty.PropertyType == typeof(bool))
                 {
-                    return !(bool)lockedProperty.GetValue(component);
+                    return (bool)lockedProperty.GetValue(component);
                 }
             }
-            return true;
+            return false;
         }
+
         public static void EnsureVisible(GameObject control)
         {
             Vector2 margin = new Vector2(40, 40);

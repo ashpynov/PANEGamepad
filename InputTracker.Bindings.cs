@@ -27,7 +27,7 @@ namespace PANEGamepad
 
             MapKeys("X", [KeyCode.LeftControl, KeyCode.Mouse0], MainGameScene.Code);          // Pick building (LeftControl)
             MapKey("Y", KeyCode.R, MainGameScene.Code);                     // Rotate
-            MapKey("LT + Start", "Undo", MainGameScene.Code);               // Undo
+
             MapKey("LB", "Pause", MainGameScene.Code);                      // Pause
             MapKey("RB", "NormalSpeed", MainGameScene.Code);                // Resume
             MapKey("LT + LB", "LowSpeed", MainGameScene.Code);              // Slower
@@ -36,14 +36,22 @@ namespace PANEGamepad
             MapKey("RT + LT + Start", KeyCode.F9, MainGameScene.Code);       // Load
             MapKey("RT + LT + Back", KeyCode.F5, MainGameScene.Code);       // Save
 
-            MapKey("LT + A", "House", MainGameScene.Code);                  // House
-            MapKey("LT + B", "Remove", MainGameScene.Code);                 // Remove
-            MapKey("LT + X", "Road", MainGameScene.Code);                   // Road
-            MapKey("LT + Y", "Roadblock", MainGameScene.Code);              // Roadblock
-            MapKey("RT + A", "Gardens", MainGameScene.Code);                // Gardens
-            MapKey("RT + B", "Plaza", MainGameScene.Code);                  // Plaza
-            MapKey("RT + X", "Firehouse", MainGameScene.Code);              // Firepost
-            MapKey("RT + Y", "ArchitectPost", MainGameScene.Code);          // Architect
+            MapKey("RT + Start", "Undo", MainGameScene.Code);               // Undo
+
+            MapKey("RT + A", "House", MainGameScene.Code);                  // House
+            MapKey("RT + B", "Remove", MainGameScene.Code);                 // Remove
+            MapKey("RT + X", "Road", MainGameScene.Code);                   // Road
+            MapKey("RT + Y", "Roadblock", MainGameScene.Code);              // Roadblock
+
+            MapFunc("RT + RSUp", MainGameScene.Code, BuildingSelector.PickCategoryCircular);
+            MapFunc("RT + RSLeft", MainGameScene.Code, BuildingSelector.PickCategoryCircular);
+            MapFunc("RT + RSDown", MainGameScene.Code, BuildingSelector.PickCategoryCircular);
+            MapFunc("RT + RSRight", MainGameScene.Code, BuildingSelector.PickCategoryCircular);
+
+            MapFunc("RT + Up", MainGameScene.Code, BuildingSelector.PickPrevCategory);
+            MapFunc("RT + Down", MainGameScene.Code, BuildingSelector.PickNextCategory);
+            MapFunc("RT + Left", MainGameScene.Code, BuildingSelector.PickPrevBuilding);
+            MapFunc("RT + Right", MainGameScene.Code, BuildingSelector.PickNextBuilding);
 
 
             MapKey("Menu", "MenuButton", MainGameScene.Code);               // Menu

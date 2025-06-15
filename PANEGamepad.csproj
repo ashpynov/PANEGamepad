@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <NoWarn>IDE0058;IDE0051;IDE0052;IDE0090;IDE0028;IDE0305;IDE0045;IDE0066;IDE0010;IDE0022;IDE0072;CS0649</NoWarn>
+        <NoWarn>IDE0058;IDE0051;IDE0052;IDE0090;IDE0028;IDE0305;IDE0045;IDE0066;IDE0010;IDE0022;IDE0072;CS0649;IDE0046</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -46,9 +46,28 @@
 
     <PropertyGroup Condition="'$(Configuration)'=='Pack'">
         <DebugType>none</DebugType>
-        <OutputPath>obj/$(Configuration)/bin/$(Version)/</OutputPath>
+        <OutputPath>obj/$(Configuration)/bin/$(Version)/BepInEx/plugins</OutputPath>
         <Optimize>True</Optimize>
     </PropertyGroup>
+
+    <Target Name="ZipOutput" AfterTargets="Build" Condition="'$(Configuration)'=='Pack'">
+        <PropertyGroup>
+            <ZipOutputPath>$(OutputPath)..\..\..\$(MSBuildProjectName)_$(Version).zip</ZipOutputPath>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <FilesToZip Include="$(OutputPath)\..\..\**\*.*" />
+        </ItemGroup>
+
+        <ZipDirectory
+            SourceDirectory="$(OutputPath)\..\.."
+            DestinationFile="$(ZipOutputPath)"
+            Overwrite="true" />
+
+        <RemoveDir Directories="$(OutputPath)\..\.." />
+
+        <Message Importance="high" Text="Created zip file at $(ZipOutputPath)" />
+    </Target>
 
     <Target Name="GenerateBuildConstants" BeforeTargets="CoreCompile">
         <WriteLinesToFile

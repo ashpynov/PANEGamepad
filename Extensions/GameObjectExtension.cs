@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -23,6 +24,23 @@ namespace PANEGamepad.Extensions
                 }
             }
         }
+        public static IEnumerable<GameObject> GetAllChildren(this GameObject parent, Type type)
+        {
+            foreach (Transform child in parent.transform)
+            {
+                Component component = child.GetComponent(type);
+                if (component != null)
+                {
+                    yield return component.gameObject;
+                }
+
+                foreach (GameObject nestedChild in child.gameObject.GetAllChildren(type))
+                {
+                    yield return nestedChild;
+                }
+            }
+        }
+
         public static T GetChild<T>(this GameObject parent, string name = null)
         {
             foreach (Transform child in parent.transform)
