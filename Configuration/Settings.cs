@@ -10,5 +10,7 @@ namespace PANEGamepad.Configuration
         public static readonly bool CapMouseMove = true;
         public static readonly bool TrackGameFocus = true;
         public static readonly bool VibrationOnConnect = true;
+
+        public static readonly float ToolTipFontSize = 32; // 18 is default
     }
 }

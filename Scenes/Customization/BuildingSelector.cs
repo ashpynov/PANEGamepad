@@ -98,6 +98,10 @@ namespace PANEGamepad.Scenes.Customization
             return false;
         }
 
+        public static string GetActiveCategoryName()
+        {
+            return pickedMode ? _currentCategoryName.Replace("And", " & ") : "";
+        }
         private static List<GameObject> GetCategories()
         {
             return GameObject.Find(CategoryRoot) is GameObject gameObject
@@ -125,7 +129,7 @@ namespace PANEGamepad.Scenes.Customization
         }
         private static bool PickBuilding(int changeCategory, int changeBuilding)
         {
-            Plugin.Log.LogInfo($"current: {_currentCategoryName}");
+            Plugin.Log.LogInfo($"current: {_currentCategoryName}: {GetActiveCategoryName()}");
             List<GameObject> categories = GetCategories();
             if (categories.Count() == 0)
             {

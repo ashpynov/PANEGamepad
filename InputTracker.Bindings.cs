@@ -65,18 +65,22 @@ namespace PANEGamepad
 
 
             MapKey("LT + Left", "commerce", MainGameScene.Code);            // Commerse overseer
+            MapKey("LT + Right", KeyCode.M);                                // Word Map
 
-            MapFunc("LT + Up", MainGameScene.Code, OverlayController.PreviousOverlay);  // Switch to previouse overlay
-            MapFunc("LT + Down", MainGameScene.Code, OverlayController.NextOverlay);    // Switch to next overlay
-            MapFunc("LT + Back", MainGameScene.Code, OverlayController.ToggleOverlay);  // On/off overlay
+            MapFunc("LT + RT + Up", MainGameScene.Code, OverlayController.PreviousOverlay);  // Switch to previouse overlay
+            MapFunc("LT + RT + Down", MainGameScene.Code, OverlayController.NextOverlay);    // Switch to next overlay
+            MapFunc("LT + RT + Back", MainGameScene.Code, OverlayController.ToggleOverlay);  // On/off overlay
 
             MapFunc("Back", MainGameScene.Code, OverseersScene.OpenLast);   // Open overseers
+            MapFunc("LT + Up", OverseersScene.Code, OverseersScene.Previous);
+            MapFunc("LT + Down", OverseersScene.Code, OverseersScene.Next);
+            MapFunc("LT + Up", MainGameScene.Code, OverseersScene.Previous);
+            MapFunc("LT + Down", MainGameScene.Code, OverseersScene.Next);
 
             MapFunc("A", SceneCode.SingleConfirm, SingleConfirmScene.PressConfirm);  // Confirm on A
             MapFunc("B", SceneCode.SingleConfirm, SingleConfirmScene.PressConfirm);  // Confirm on B too
 
-            MapFunc("LT + Up", OverseersScene.Code, OverseersScene.Previous);
-            MapFunc("LT + Down", OverseersScene.Code, OverseersScene.Next);
+
 
             MapKey(KeyCode.Return, KeyCode.Mouse0);
             MapKey(KeyCode.KeypadEnter, KeyCode.Mouse0);

@@ -3,6 +3,7 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using PANEGamepad.Configuration;
 using PANEGamepad.Scenes.Customization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,6 +91,10 @@ namespace PANEGamepad
                 .Field("_priceA")?
                 .Property("text");
 
+            Traverse counterText = traverse
+                .Field("_count")?
+                .Property("text");
+
             traverse
                 .Field("_priceA")?
                 .Property("enableWordWrapping")?.SetValue(false);
@@ -111,11 +116,37 @@ namespace PANEGamepad
                 .Property("TypeName")?
                 .GetValue<string>() ?? "";
 
+            string category = BuildingSelector.GetActiveCategoryName();
+
             if (name != "")
             {
-                text.SetValue($" {name} - {text?.GetValue() ?? ""}");
+                text.SetValue($"{name} - {text?.GetValue() ?? ""}");
                 GameObject showCost = _price.transform.parent.parent.gameObject;
                 showCost.GetComponent<LayoutElement>().preferredWidth = -1;
+            }
+
+            Traverse _priceA = traverse.Field("_priceA");
+            _priceA.Property("margin")?.SetValue(new Vector4(5, 0, 0, 0));
+            _priceA.Property("fontSize")?.SetValue(Settings.ToolTipFontSize);
+
+            Traverse _priceB = traverse.Field("_priceB");
+            _priceB.Property("margin")?.SetValue(new Vector4(5, 0, 0, 0));
+            _priceB.Property("fontSize")?.SetValue(Settings.ToolTipFontSize);
+
+            Traverse _count = traverse.Field("_count");
+            _count?.Property("margin")?.SetValue(new Vector4(5, 0, 5, 0));
+            _count?.Property("fontSize")?.SetValue(Settings.ToolTipFontSize);
+
+            if (category != "")
+            {
+                counterText.SetValue(category + (count > 0 ? $"\n{counterText.GetValue() ?? ""}" : ""));
+                (_count?.Property("gameObject").GetValue() as GameObject)?.SetActive(true);
+                (traverse.Field("_separator")?.Property("gameObject").GetValue() as GameObject)?.SetActive(true);
+            }
+            else if (costB == 0 && count == 0)
+            {
+                (_count?.Property("gameObject").GetValue() as GameObject)?.SetActive(false);
+                (traverse.Field("_separator")?.Property("gameObject").GetValue() as GameObject)?.SetActive(false);
             }
         }
     }

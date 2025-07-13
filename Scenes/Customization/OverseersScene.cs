@@ -144,7 +144,7 @@ namespace PANEGamepad.Scenes.Customization
             List<GameObject> overseers = new();
             if (ovs == null || !ovs.activeInHierarchy)
             {
-                return false;
+                return OpenLast();
             }
             for (int i = 0; i < ovs.transform.childCount; i++)
             {
@@ -161,7 +161,7 @@ namespace PANEGamepad.Scenes.Customization
 
             if (selectors == null || !selectors.activeInHierarchy)
             {
-                return false;
+                return OpenLast();
             }
 
             for (int i = 0; i < selectors.transform.childCount; i++)
@@ -174,13 +174,13 @@ namespace PANEGamepad.Scenes.Customization
             }
             if (buttons.Count < 2)
             {
-                return false;
+                return OpenLast();
             }
 
             GameObject activeDlg = overseers.FirstOrDefault(o => o.activeSelf);
             if (!activeDlg)
             {
-                return false;
+                return OpenLast();
             }
 
             int idx = buttons.FindIndex(b => b.name == OverseersButton[activeDlg.name]);

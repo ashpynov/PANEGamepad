@@ -51,15 +51,15 @@ Almost everytime gamepad just mimic keyboard or mouse pressing, with some adopta
 |LT + RStick Down| Zoom View Out
 |LS         | Flat mode toggle
 |LT + LS    | Grid mode toggle
-|LT + Up    | Previous Overlay
-|LT + Down  | Next Overlay
-|LT + View  | Toggle overlay
+|LT + RT + Up    | Previous Overlay
+|LT + RT + Down  | Next Overlay
+|LT + RT + View  | Toggle overlay
 |LT + Left  | Commerce overseer
-|LT + RT + Menu | Qiuck Load
-|LT + RT + View | Qiuck Save
-| ***Overseers***
+|LT + Right  | World Map
 |LT + Up    | Previous overseer
 |LT + Down  | Next overseer
+|LT + RT + Menu | Qiuck Load
+|LT + RT + View | Qiuck Save
 | ***WorldMap***
 |View       | Open Commerce overseer
 
