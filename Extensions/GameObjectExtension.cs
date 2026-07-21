@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -51,6 +52,22 @@ namespace PANEGamepad.Extensions
                 }
             }
             return default;
+        }
+
+        public static RectTransform GetRect(this GameObject gameObject)
+        {
+            RectTransform rectTransform = gameObject?.GetComponent<RectTransform>();
+
+            if (gameObject?.GetComponent("CustomToggle") as MonoBehaviour is not null)
+            {
+                return gameObject
+                    .GetAllChildren(typeof(RectTransform))
+                    .FirstOrDefault(c => c.name == "Toggle_Background")
+                    ?.GetComponent<RectTransform>()
+                ?? rectTransform;
+            }
+
+            return rectTransform;
         }
 
         public static Component GetComponentInParent(this GameObject child, string typeName)

@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System.Linq;
 using System.Collections.Generic;
 using PANEGamepad.Scenes;
+using PANEGamepad.Extensions;
 
 namespace PANEGamepad
 {
@@ -18,8 +19,13 @@ namespace PANEGamepad
 
         private static float GetProximity(GameObject to, Vector3 fromScreenPos, Vector3 direction, float maxSqrMagnitude)
         {
-            RectTransform rectTransform = to.transform as RectTransform;
+            RectTransform rectTransform = to.GetRect();
+
             Canvas canvas = to.GetComponentInParent<Canvas>();
+            if (!canvas)
+            {
+                return float.NegativeInfinity;
+            }
             RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, fromScreenPos, canvas.worldCamera, out Vector3 fromWorldPos);
 
             Vector3 centerPos = rectTransform.TransformPoint((rectTransform != null) ? ((Vector3)rectTransform.rect.center) : Vector3.zero);
@@ -44,7 +50,7 @@ namespace PANEGamepad
                 return false;
             }
 
-            RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+            RectTransform rectTransform = gameObject.GetRect();
             Canvas canvas = gameObject.GetComponentInParent<Canvas>();
             if (rectTransform == null || canvas == null)
             {
@@ -80,7 +86,7 @@ namespace PANEGamepad
             if (from != null)
             {
                 Canvas canvas = from.GetComponentInParent<Canvas>();
-                RectTransform rect = from.GetComponent<RectTransform>();
+                RectTransform rect = from.GetRect();
                 Vector3 localPos = GetPointOnRectEdge(rect, dirNorm);
                 Vector3 worldPos = rect.TransformPoint(localPos);
                 fromPos = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, worldPos);
@@ -112,14 +118,14 @@ namespace PANEGamepad
             }
             candidates.Sort((a, b) => b.proximityFactor.CompareTo(a.proximityFactor));
 
-            // if (from != null)
-            // {
-            //     Plugin.Log.LogInfo($"From: {from.name}:");
-            // }
-            // foreach (Proximity p in candidates.Take(10))
-            // {
-            //     Plugin.Log.LogInfo($"      Proximity Candidates: {p.gameObject.name}: {p.proximityFactor} : {SceneController.IsSelectable(p.gameObject, from)}");
-            // }
+            if (from != null)
+            {
+                Plugin.Log.LogInfo($"From: {from.name}:");
+            }
+            foreach (Proximity p in candidates.Take(10))
+            {
+                Plugin.Log.LogInfo($"      Proximity Candidates: {p.gameObject.name}: {p.proximityFactor} : {SceneController.IsSelectable(p.gameObject, from)}");
+            }
             return candidates.FirstOrDefault(c => SceneController.IsSelectable(c.gameObject, from))?.gameObject;
         }
 

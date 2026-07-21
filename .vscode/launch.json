@@ -16,7 +16,7 @@
             "console": "internalConsole",
             "logging": {
                 "programOutput": true,
-                "moduleLoad": false,
+                "moduleLoad": true,
                 "processExit": false
             }
         }

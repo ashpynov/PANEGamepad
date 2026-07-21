@@ -21,7 +21,7 @@ namespace PANEGamepad.Scenes
         {
             // Step 1: Get the button's center in screen space
             Canvas canvas = gameObject.GetComponentInParent<Canvas>();
-            RectTransform target = gameObject.GetComponent<RectTransform>();
+            RectTransform target = gameObject.GetRect();
 
             // Get the button's center in screen space
             Vector2 targetCenter = RectTransformUtility.WorldToScreenPoint(
@@ -37,7 +37,7 @@ namespace PANEGamepad.Scenes
         {
             // Step 1: Get the button's center in screen space
             Canvas canvas = gameObject.GetComponentInParent<Canvas>();
-            RectTransform target = gameObject.GetComponent<RectTransform>();
+            RectTransform target = gameObject.GetRect();
 
             // Get the button's center in screen space
             Vector2 targetCenter = RectTransformUtility.WorldToScreenPoint(
@@ -184,7 +184,7 @@ namespace PANEGamepad.Scenes
 
             Canvas.ForceUpdateCanvases();
 
-            RectTransform child = control.GetComponent<RectTransform>();
+            RectTransform child = control.GetRect();
 
             // Get min and max of the viewport and child in local space to the viewport so we can compare them.
             // NOTE: use viewport instead of the scrollRect as viewport doesn't include the scrollbars in it.

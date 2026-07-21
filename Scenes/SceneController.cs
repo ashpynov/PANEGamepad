@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using PANEGamepad.Extensions;
 using PANEGamepad.Scenes.Customization;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,7 +19,13 @@ namespace PANEGamepad.Scenes
         private GameObject _focused = null;
         private int _lastSelectablesCount = 0;
 
-        private static readonly string[] CustomTypes = ["ButtonWithHover", "GameModeWidget", "MapEntry", "WorldMapCity"];
+        private static readonly string[] CustomTypes =
+        [
+            "ButtonWithHover",
+            "GameModeWidget",
+            "MapEntry",
+            "WorldMapCity",
+            "CustomToggle"];
 
         public void Invalidate(bool force = false)
         {
@@ -125,7 +132,7 @@ namespace PANEGamepad.Scenes
                 {
                     PointerEventData pointerData = new(EventSystem.current)
                     {
-                        position = _focused.GetComponent<RectTransform>().position
+                        position = _focused.GetRect().position
                     };
                     ExecuteEvents.Execute(_focused, pointerData, ExecuteEvents.pointerExitHandler);
                 }
@@ -137,7 +144,7 @@ namespace PANEGamepad.Scenes
                 PointerEventData pointerData = new(EventSystem.current)
                 {
                     pointerEnter = enter,
-                    position = enter.GetComponent<RectTransform>().position
+                    position = enter.GetRect().position
                 };
                 ExecuteEvents.Execute(enter, pointerData, ExecuteEvents.pointerEnterHandler);
 
@@ -149,7 +156,10 @@ namespace PANEGamepad.Scenes
         private IEnumerable<GameObject> GetSceneGameObjects(Vector2 direction = default)
         {
             List<GameObject> components = new();
-            components.AddRange(Selectable.allSelectablesArray.Where(c => c.interactable).Select(c => c.gameObject));
+            components.AddRange(
+                Selectable.allSelectablesArray
+                    .Where(c => c.interactable && c.GetComponentInParent<Canvas>() != null)
+                    .Select(c => c.gameObject));
 
             components.AddRange(GameObject.FindObjectsOfType<MonoBehaviour>()
                 .Where(c => CustomTypes.Contains(c.GetType().Name))
